@@ -1,0 +1,28 @@
+server:
+  port: 8888
+
+
+spring:
+  profiles:
+    active: native
+  application:
+    name: config-server
+  cloud:
+    config:
+      server:
+        native:
+          search-locations:
+            - classpath:/configurations/common-{profile}
+            - classpath:/configurations/{profile}
+
+
+# Eureka Service Discovery
+eureka:
+  instance:
+    hostname: localhost
+  client:
+    service-url:
+      defaultZone: http://localhost:8190/eureka
+
+application:
+  kafka-path: /Users/user/Downloads/kafka_server
