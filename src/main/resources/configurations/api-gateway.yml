@@ -1,11 +1,11 @@
 server:
-  port: 8222
+  port: ${CONTAINER_PORT}
 
 spring:
+  profiles:
+    active: ${ACTIVE_PROFILE}
   main:
     allow-bean-definition-overriding: true
-  #  config:
-#    import: optional:classpath:/configurations/local/common-local.yml
   application:
     name: api-gateway
   cloud:

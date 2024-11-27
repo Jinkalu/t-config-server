@@ -1,9 +1,13 @@
 server:
-  port: 8202
+  port: ${CONTAINER_PORT}
   servlet:
     context-path: /post-service
 
 spring:
+  profiles:
+    active: ${ACTIVE_PROFILE}
+  config:
+    import: optional:classpath:/configurations/common.yml
   servlet:
     multipart:
       max-file-size: 20MB
@@ -17,7 +21,7 @@ spring:
         enabled: false
   kafka:
     consumer:
-      bootstrap-servers: localhost:9092
+      bootstrap-servers: localhost:${KAFKA_PORT}
       group-id: post-service-group
       auto-offset-reset: earliest
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
@@ -30,8 +34,6 @@ spring:
     listener:
       type: single
     producer:
-      bootstrap-servers: localhost:9092
+      bootstrap-servers: localhost:${KAFKA_PORT}
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
-  config:
-    import: optional:classpath:/configurations/local/common-local.yml

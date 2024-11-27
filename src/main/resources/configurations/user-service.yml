@@ -1,0 +1,38 @@
+server:
+  port: ${CONTAINER_PORT}
+  servlet:
+    context-path: /user-service
+
+spring:
+  profiles:
+    active: ${ACTIVE_PROFILE}
+  config:
+    import: optional:classpath:/configurations/common.yml
+  thymeleaf:
+    prefix: classpath:/templates/
+    suffix: .html
+  mail:
+    host: mail.smtp2go.com
+    port: 587
+    username: pangeanis.com
+    password: EG4QKkxv13uItbC9
+    protocol: smtp
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+  kafka:
+    consumer:
+      bootstrap-servers: localhost:${KAFKA_PORT}
+      group-id: user-service-group
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: '*'
+    producer:
+      bootstrap-servers: localhost:${KAFKA_PORT}
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer

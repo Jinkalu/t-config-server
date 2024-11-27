@@ -1,0 +1,31 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Checkout') {
+            steps {
+                // Checkout the code from Git repository
+                git url: 'https://config-server.git', branch: 'main'
+            }
+        }
+
+        stage('Run Docker Compose') {
+            steps {
+                // Ensure start.sh is executable
+                sh 'chmod +x ./start.sh'
+
+                // Run the start.sh script
+                sh './start.sh'
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'Pipeline completed successfully!'
+        }
+        failure {
+            echo 'Pipeline failed!'
+        }
+    }
+}

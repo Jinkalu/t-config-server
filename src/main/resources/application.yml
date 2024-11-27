@@ -1,10 +1,10 @@
 server:
-  port: 8888
+  port: ${CONTAINER_PORT}
 
 
 spring:
   profiles:
-    active: native
+    active: ${ACTIVE_PROFILE}
   application:
     name: config-server
   cloud:
@@ -12,8 +12,7 @@ spring:
       server:
         native:
           search-locations:
-            - classpath:/configurations/common-{profile}
-            - classpath:/configurations/{profile}
+            - classpath:/configurations
 
 
 # Eureka Service Discovery
