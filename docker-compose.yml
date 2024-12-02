@@ -1,15 +1,40 @@
+version: '3.8'
+
 services:
+  discovery-server:
+    image: discovery-server:v1
+    env_file:
+      - .env
+    expose:
+      - ${DISCOVERY_PORT}  # Expose container port internally
+    ports:
+      - ${DISCOVERY_PORT}:${HOST_DISCOVERY_PORT}  # Expose to a different host port
+    networks:
+      - app-network
+
   config-server:
     container_name: config-server-container
     build:
       context: .
       args:
-        CONTAINER_PORT: ${CONTAINER_PORT}
+        CONTAINER_PORT: ${CONFIG_PORT}  # Use the environment variable for the container port
     image: config-server:v1
     restart: unless-stopped
     env_file:
-      - ${ENV_FILE}
+      - .env
     expose:
-      - ${CONTAINER_PORT}
+      - ${CONFIG_PORT}  # Expose container port internally
     ports:
-     - ${CONTAINER_PORT}:${HOST_PORT}
+      - ${CONFIG_PORT}:${HOST_CONFIG_PORT}  # Expose to a different host port
+    environment:
+      - DISCOVERY_SERVER_URL=http://discovery-server-container:${DISCOVERY_PORT}/eureka  # Connect to discovery server container
+      - KAFKA_PATH=${KAFKA_PATH}
+    depends_on:
+      - discovery-server
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    external: true
+    driver: bridge

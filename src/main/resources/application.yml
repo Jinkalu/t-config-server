@@ -1,5 +1,6 @@
 server:
-  port: ${CONTAINER_PORT}
+  address: ${SERVER_ADDRESS}
+  port: ${CONFIG_PORT}
 
 
 spring:
@@ -13,6 +14,8 @@ spring:
         native:
           search-locations:
             - classpath:/configurations
+    discovery:
+      enabled: true
 
 
 # Eureka Service Discovery
@@ -21,7 +24,7 @@ eureka:
     hostname: localhost
   client:
     service-url:
-      defaultZone: http://localhost:8190/eureka
+      defaultZone: http://localhost:${DISCOVERY_PORT}/eureka
 
 application:
-  kafka-path: /Users/user/Downloads/kafka_server
+  kafka-path: ${KAFKA_PATH}

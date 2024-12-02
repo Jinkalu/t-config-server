@@ -1,0 +1,33 @@
+services:
+  discovery-server:
+#    container_name: discovery-server-container
+    image: discovery-server:v1
+
+  config-server:
+    container_name: config-server-container
+    build:
+      context: .
+      args:
+        CONTAINER_PORT: ${CONTAINER_PORT}
+
+    image: config-server:v1
+    restart: unless-stopped
+    env_file:
+      - .env
+    expose:
+      - ${CONTAINER_PORT}
+    ports:
+     - ${CONTAINER_PORT}:${HOST_PORT}
+    environment:
+      - DISCOVERY_SERVER_URL=http://localhost:${DISCOVERY_PORT}/eureka
+      - KAFKA_PATH=${KAFKA_PATH}
+    depends_on:
+      - discovery-server
+    networks:
+      - app-network
+
+
+networks:
+  app-network:
+    external: true
+    driver: bridge
